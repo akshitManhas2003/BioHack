@@ -4,10 +4,47 @@
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
 [![React 18+](https://img.shields.io/badge/React-18+-61dafb.svg)](https://react.dev/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-009485.svg)](https://fastapi.tiangolo.com/)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-BioHack-181717?logo=github)](https://github.com/akshitManhas2003/BioHack)
+[![Try the App](https://img.shields.io/badge/Try%20App-http%3A%2F%2Flocalhost%3A3000-green?style=flat-square)](http://localhost:3000)
 
 A comprehensive, integrated surveillance platform designed for **early detection and monitoring** of disease outbreaks across human, animal, and environmental domains. Built with **FastAPI**, **React**, **SQLite** (local), and modern web technologies.
 
 > Integrated One Health approach for zoonotic disease prevention and control
+
+---
+
+## 🚀 **TRY THE APP NOW**
+
+### 🌐 Quick Access Links
+| Interface | Link | Description |
+|-----------|------|-------------|
+| **Dashboard** | http://localhost:3000 | Real-time surveillance metrics & alerts |
+| **Data Submission** | http://localhost:3000/data-submission | Submit human, animal, environmental data |
+| **Map View** | http://localhost:3000/map | Geographic visualization of cases |
+| **API Documentation** | http://localhost:8000/docs | Interactive Swagger UI for REST API |
+
+### ⚡ 30-Second Setup
+```bash
+# Clone repo
+git clone https://github.com/akshitManhas2003/BioHack.git
+cd BioHack
+
+# Start backend (Terminal 1)
+cd backend && python -m uvicorn main:app --reload
+
+# Start frontend (Terminal 2)
+cd frontend && npm install && npm run dev
+
+# Open in browser: http://localhost:3000
+```
+
+### 📊 Pre-loaded Demo Data
+✅ 11 example datasets ready to explore  
+✅ 4 outbreak scenarios (Nairobi, Kampala, Lagos, Addis Ababa)  
+✅ 4 alert levels (Low → Critical)  
+✅ Run `python backend/test_submissions.py` for instant data
+
+---
 
 ## 🎯 Overview
 
@@ -56,11 +93,44 @@ npm install
 npm run dev
 
 # 3. Access Application
-# Dashboard: http://localhost:5173
+# Dashboard: http://localhost:3000 ✅
+# Data Submission: http://localhost:3000/data-submission
 # API Docs: http://localhost:8000/docs
 ```
 
 **Detailed setup guide**: See [SETUP_GUIDE.md](SETUP_GUIDE.md)
+
+---
+
+## 📚 **DOCUMENTATION & GUIDES**
+
+### 🎓 Start Here
+- **[DATA_SUBMISSION_QUICK_GUIDE.md](DATA_SUBMISSION_QUICK_GUIDE.md)** ⭐ - 10-min quick start
+- **[DATA_SUBMISSION_GUIDE.md](DATA_SUBMISSION_GUIDE.md)** - Comprehensive with 11 examples
+- **[EXAMPLE_DATASETS.json](EXAMPLE_DATASETS.json)** - Pre-built demo data
+
+### 🔧 Technical Docs
+- **[API_REFERENCE.md](API_REFERENCE.md)** - Complete API endpoints
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - System design & components
+- **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - Detailed installation
+
+### 🤝 Contributing & Support
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Common issues & solutions
+- **[CHANGELOG.md](CHANGELOG.md)** - Version history & roadmap
+
+---
+
+## 🔗 **Repository Links**
+
+| Link | Description |
+|------|-------------|
+| **[GitHub Repository](https://github.com/akshitManhas2003/BioHack)** | Full source code & documentation |
+| **[Issues](https://github.com/akshitManhas2003/BioHack/issues)** | Report bugs or request features |
+| **[Discussions](https://github.com/akshitManhas2003/BioHack/discussions)** | Community discussions & Q&A |
+| **[Releases](https://github.com/akshitManhas2003/BioHack/releases)** | Version releases & downloads |
+
+---
 
 ## ✨ Key Features
 
