@@ -1,0 +1,389 @@
+{
+  "submission_examples": {
+    "human_cases": [
+      {
+        "id": "EXAMPLE_HUMAN_001",
+        "title": "High-Severity Respiratory Case - Nairobi",
+        "description": "A 45-year-old male with severe respiratory symptoms presenting with fever and shortness of breath",
+        "form_data": {
+          "patient_name": "John Kipchoge",
+          "age": 45,
+          "gender": "M",
+          "case_type": "Respiratory",
+          "symptoms": ["cough", "fever", "shortness_of_breath", "headache"],
+          "severity": "High",
+          "hospitalized": true,
+          "contact_count": 12,
+          "outcome": "Recovering",
+          "location_name": "Nairobi, Eastlands",
+          "latitude": -1.2921,
+          "longitude": 36.8219,
+          "reported_by": "doctor_ali"
+        },
+        "expected_alert": "CRITICAL",
+        "risk_factors": ["fever", "SOB", "hospitalized", "high_contacts"]
+      },
+      {
+        "id": "EXAMPLE_HUMAN_002",
+        "title": "Foodborne Illness Case - Kampala",
+        "description": "A 28-year-old female with acute gastrointestinal symptoms suggesting potential food poisoning",
+        "form_data": {
+          "patient_name": "Grace Nakamatte",
+          "age": 28,
+          "gender": "F",
+          "case_type": "Gastrointestinal",
+          "symptoms": ["diarrhea", "vomiting", "abdominal_pain", "dehydration"],
+          "severity": "High",
+          "hospitalized": true,
+          "contact_count": 5,
+          "outcome": "Recovering",
+          "location_name": "Kampala, Downtown",
+          "latitude": 0.3476,
+          "longitude": 32.5825,
+          "reported_by": "nurse_amara"
+        },
+        "expected_alert": "HIGH",
+        "risk_factors": ["GI_cluster", "hospitalized", "vomiting"]
+      },
+      {
+        "id": "EXAMPLE_HUMAN_003",
+        "title": "Mild Respiratory Case - Addis Ababa",
+        "description": "A 25-year-old male with mild respiratory symptoms, likely viral upper respiratory infection",
+        "form_data": {
+          "patient_name": "Tadesse Bekele",
+          "age": 25,
+          "gender": "M",
+          "case_type": "Respiratory",
+          "symptoms": ["mild_cough"],
+          "severity": "Low",
+          "hospitalized": false,
+          "contact_count": 2,
+          "outcome": "Recovering",
+          "location_name": "Addis Ababa, Bole",
+          "latitude": 9.0320,
+          "longitude": 38.7469,
+          "reported_by": "health_ext_dereje"
+        },
+        "expected_alert": "LOW",
+        "risk_factors": ["none"]
+      },
+      {
+        "id": "EXAMPLE_HUMAN_004",
+        "title": "Moderate Respiratory Case - Nairobi (Cluster 2)",
+        "description": "A 32-year-old female with moderate respiratory symptoms from same area as case 001",
+        "form_data": {
+          "patient_name": "Mary Wanjiru",
+          "age": 32,
+          "gender": "F",
+          "case_type": "Respiratory",
+          "symptoms": ["cough", "fever"],
+          "severity": "Moderate",
+          "hospitalized": false,
+          "contact_count": 4,
+          "outcome": "Stable",
+          "location_name": "Nairobi, Eastlands",
+          "latitude": -1.2920,
+          "longitude": 36.8220,
+          "reported_by": "doctor_ali"
+        },
+        "expected_alert": "HIGH",
+        "risk_factors": ["cluster_with_001", "same_location", "fever"],
+        "note": "Triggers escalation due to proximity to HUMAN_001"
+      }
+    ],
+    "animal_events": [
+      {
+        "id": "EXAMPLE_ANIMAL_001",
+        "title": "Poultry Farm Respiratory Outbreak - Nairobi",
+        "description": "Chicken farm with 45 deaths and 120 affected birds (9% mortality rate)",
+        "form_data": {
+          "species": "Chicken",
+          "population_count": 500,
+          "mortality_count": 45,
+          "morbidity_count": 120,
+          "clinical_signs": ["respiratory_distress", "dropped_egg_production", "lethargy"],
+          "location_name": "Nairobi, Poultry Farm",
+          "latitude": -1.2915,
+          "longitude": 36.8225,
+          "farm_id": "FARM_001",
+          "vaccination_status": "Partially Vaccinated",
+          "reported_by": "vet_fatima"
+        },
+        "expected_alert": "CRITICAL",
+        "mortality_rate": "9%",
+        "risk_factors": ["high_mortality", "respiratory_signs", "partially_vaccinated"],
+        "note": "2.1km from respiratory human cases - triggers zoonotic alert"
+      },
+      {
+        "id": "EXAMPLE_ANIMAL_002",
+        "title": "Turkey Farm Mixed Disease - Nairobi",
+        "description": "Turkey farm with 18 deaths and 55 affected birds (9% mortality) - unvaccinated",
+        "form_data": {
+          "species": "Turkey",
+          "population_count": 200,
+          "mortality_count": 18,
+          "morbidity_count": 55,
+          "clinical_signs": ["coughing", "nasal_discharge", "reduced_appetite"],
+          "location_name": "Nairobi, Mixed Farm",
+          "latitude": -1.2918,
+          "longitude": 36.8220,
+          "farm_id": "FARM_002",
+          "vaccination_status": "Not Vaccinated",
+          "reported_by": "vet_fatima"
+        },
+        "expected_alert": "CRITICAL",
+        "mortality_rate": "9%",
+        "risk_factors": ["unvaccinated", "high_mortality", "respiratory_signs"],
+        "note": "Unvaccinated + high mortality + near ANIMAL_001 = compound risk"
+      },
+      {
+        "id": "EXAMPLE_ANIMAL_003",
+        "title": "Cattle Farm Gastrointestinal Issue - Kampala",
+        "description": "Dairy farm with 5 cattle deaths and 28 affected (3.3% mortality) - well vaccinated",
+        "form_data": {
+          "species": "Cattle",
+          "population_count": 150,
+          "mortality_count": 5,
+          "morbidity_count": 28,
+          "clinical_signs": ["diarrhea", "reduced_milk_production"],
+          "location_name": "Kampala, Dairy Farm",
+          "latitude": 0.3480,
+          "longitude": 32.5820,
+          "farm_id": "FARM_003",
+          "vaccination_status": "Fully Vaccinated",
+          "reported_by": "vet_gopal"
+        },
+        "expected_alert": "MODERATE",
+        "mortality_rate": "3.3%",
+        "risk_factors": ["manageable_mortality"],
+        "note": "Vaccination helping; correlates with nearby human GI cases - foodborne investigation"
+      },
+      {
+        "id": "EXAMPLE_ANIMAL_004",
+        "title": "Pig Farm Respiratory Alert - Lagos",
+        "description": "Swine farm with 12 deaths and 45 affected pigs (4% mortality) - respiratory signs",
+        "form_data": {
+          "species": "Swine",
+          "population_count": 300,
+          "mortality_count": 12,
+          "morbidity_count": 45,
+          "clinical_signs": ["respiratory_distress", "fever", "lethargy"],
+          "location_name": "Lagos, Pig Farm",
+          "latitude": 6.5245,
+          "longitude": 3.3790,
+          "farm_id": "FARM_004",
+          "vaccination_status": "Partially Vaccinated",
+          "reported_by": "vet_nkomo"
+        },
+        "expected_alert": "HIGH",
+        "mortality_rate": "4%",
+        "risk_factors": ["respiratory_signs", "fever_pattern"]
+      }
+    ],
+    "environmental_samples": [
+      {
+        "id": "EXAMPLE_ENV_001",
+        "title": "Contaminated Water Source - Nairobi Market",
+        "description": "Water from local market testing positive for H5N1 and Influenza A viruses",
+        "form_data": {
+          "sample_type": "Water",
+          "location_name": "Nairobi, Market Water Source",
+          "latitude": -1.2925,
+          "longitude": 36.8215,
+          "water_quality_ph": 6.8,
+          "water_turbidity": 8.5,
+          "temperature": 22,
+          "pathogen_detected": ["H5N1", "Influenza A"],
+          "pollutant_level": 8.5,
+          "pollutant_type": "Biological",
+          "notes": "Water source near poultry market showing high contamination",
+          "reported_by": "env_ahmed"
+        },
+        "expected_alert": "CRITICAL",
+        "risk_factors": ["zoonotic_pathogen", "H5N1_detected", "high_turbidity"],
+        "note": "Between HUMAN_001, ANIMAL_001, ANIMAL_002 - confirms transmission route"
+      },
+      {
+        "id": "EXAMPLE_ENV_002",
+        "title": "Food Contamination - Kampala Market",
+        "description": "Market produce testing positive for Salmonella and E.coli O157:H7",
+        "form_data": {
+          "sample_type": "Food",
+          "location_name": "Kampala, Market Produce",
+          "latitude": 0.3478,
+          "longitude": 32.5825,
+          "temperature": 28,
+          "humidity": 75,
+          "pathogen_detected": ["Salmonella", "E.coli_O157:H7"],
+          "pollutant_level": 7.8,
+          "pollutant_type": "Biological",
+          "notes": "Vegetables from local market testing positive for pathogens",
+          "reported_by": "env_kosiwe"
+        },
+        "expected_alert": "HIGH",
+        "risk_factors": ["GI_pathogens", "poor_storage_temp", "high_humidity"],
+        "note": "Correlates with HUMAN_002 (foodborne GI case) and ANIMAL_003 (cattle GI)"
+      },
+      {
+        "id": "EXAMPLE_ENV_003",
+        "title": "Poor Air Quality - Lagos Industrial Area",
+        "description": "Severe air pollution with PM10 levels 5.78x WHO limit causing respiratory concerns",
+        "form_data": {
+          "sample_type": "Air",
+          "location_name": "Lagos, Industrial Area",
+          "latitude": 6.5244,
+          "longitude": 3.3792,
+          "air_quality_index": 156,
+          "pollutant_level": 289,
+          "pollutant_type": "PM10",
+          "temperature": 31,
+          "pathogen_detected": [],
+          "notes": "Severe air pollution from industrial emissions affecting nearby communities",
+          "reported_by": "env_okonkwo"
+        },
+        "expected_alert": "MODERATE",
+        "risk_factors": ["poor_AQI", "PM10_critical", "industrial_pollution"],
+        "note": "May exacerbate respiratory symptoms in affected population"
+      },
+      {
+        "id": "EXAMPLE_ENV_004",
+        "title": "Soil Contamination - Lagos Agricultural Area",
+        "description": "Soil showing heavy metal contamination and mycobacterial/fungal pathogens",
+        "form_data": {
+          "sample_type": "Soil",
+          "location_name": "Lagos, Agricultural Area",
+          "latitude": 6.5240,
+          "longitude": 3.3795,
+          "water_quality_ph": 5.2,
+          "heavy_metals": "High",
+          "pathogen_detected": ["Mycobacterium", "Coccidioides"],
+          "pollutant_level": 8.9,
+          "pollutant_type": "Heavy Metals",
+          "temperature": 29,
+          "notes": "Soil contamination affecting local crops and farmer health",
+          "reported_by": "env_adeyemi"
+        },
+        "expected_alert": "MODERATE",
+        "risk_factors": ["heavy_metals", "acid_soil", "fungal_pathogens"],
+        "note": "Impacts agricultural workers and crop safety"
+      }
+    ],
+    "submission_scenarios": [
+      {
+        "scenario_id": "SCENARIO_001_ZOONOTIC",
+        "title": "Zoonotic Disease Outbreak Detection",
+        "description": "Multi-domain outbreak showing disease transmission from animals to humans via environmental route",
+        "sequence": [
+          {
+            "order": 1,
+            "timestamp": "2026-04-19T08:00:00Z",
+            "type": "Human Case",
+            "data_ref": "EXAMPLE_HUMAN_001",
+            "action": "Submit first respiratory case"
+          },
+          {
+            "order": 2,
+            "timestamp": "2026-04-19T14:00:00Z",
+            "type": "Animal Event",
+            "data_ref": "EXAMPLE_ANIMAL_001",
+            "action": "Submit poultry farm outbreak (2.1km away)"
+          },
+          {
+            "order": 3,
+            "timestamp": "2026-04-19T18:00:00Z",
+            "type": "Environmental Sample",
+            "data_ref": "EXAMPLE_ENV_001",
+            "action": "Submit water sample positive for H5N1 (between locations)"
+          },
+          {
+            "order": 4,
+            "timestamp": "2026-04-20T09:00:00Z",
+            "type": "Human Case",
+            "data_ref": "EXAMPLE_HUMAN_004",
+            "action": "Second case from same area escalates alert",
+            "expected_system_behavior": "CRITICAL alert generated with zoonotic risk score 92/100"
+          }
+        ]
+      },
+      {
+        "scenario_id": "SCENARIO_002_FOODBORNE",
+        "title": "Foodborne Illness Cluster Investigation",
+        "description": "Multiple domain indicators pointing to contaminated food as source",
+        "sequence": [
+          {
+            "order": 1,
+            "timestamp": "2026-04-19T10:00:00Z",
+            "type": "Human Case",
+            "data_ref": "EXAMPLE_HUMAN_002",
+            "action": "Report GI case in Kampala"
+          },
+          {
+            "order": 2,
+            "timestamp": "2026-04-19T16:00:00Z",
+            "type": "Animal Event",
+            "data_ref": "EXAMPLE_ANIMAL_003",
+            "action": "Report dairy farm GI outbreak"
+          },
+          {
+            "order": 3,
+            "timestamp": "2026-04-19T20:00:00Z",
+            "type": "Environmental Sample",
+            "data_ref": "EXAMPLE_ENV_002",
+            "action": "Food sample positive for Salmonella and E.coli",
+            "expected_system_behavior": "HIGH alert with foodborne cluster notification"
+          }
+        ]
+      },
+      {
+        "scenario_id": "SCENARIO_003_ENVIRONMENTAL",
+        "title": "Environmental Health Hazard Alert",
+        "description": "Environmental monitoring reveals air quality and soil contamination risks",
+        "sequence": [
+          {
+            "order": 1,
+            "timestamp": "2026-04-19T12:00:00Z",
+            "type": "Environmental Sample",
+            "data_ref": "EXAMPLE_ENV_003",
+            "action": "Report poor air quality in Lagos"
+          },
+          {
+            "order": 2,
+            "timestamp": "2026-04-19T15:00:00Z",
+            "type": "Environmental Sample",
+            "data_ref": "EXAMPLE_ENV_004",
+            "action": "Report soil contamination nearby",
+            "expected_system_behavior": "MODERATE alert with environmental health advisory"
+          }
+        ]
+      }
+    ],
+    "testing_checklist": {
+      "human_cases": {
+        "test_1": "Submit EXAMPLE_HUMAN_001, verify High severity triggers alert",
+        "test_2": "Submit EXAMPLE_HUMAN_002 in Kampala, verify GI case recorded",
+        "test_3": "Submit EXAMPLE_HUMAN_003, verify Low severity (no alert)",
+        "test_4": "Submit EXAMPLE_HUMAN_004 near EXAMPLE_HUMAN_001, verify escalation"
+      },
+      "animal_events": {
+        "test_1": "Submit EXAMPLE_ANIMAL_001, verify high mortality calculated (9%)",
+        "test_2": "Submit EXAMPLE_ANIMAL_002 unvaccinated, verify warning",
+        "test_3": "Submit EXAMPLE_ANIMAL_003 vaccinated, verify manageable assessment",
+        "test_4": "Check all 4 animals visible on map"
+      },
+      "environmental_samples": {
+        "test_1": "Submit EXAMPLE_ENV_001, verify pathogen display",
+        "test_2": "Submit EXAMPLE_ENV_002, verify food contamination recorded",
+        "test_3": "Submit EXAMPLE_ENV_003, verify air quality index shown",
+        "test_4": "Submit EXAMPLE_ENV_004, verify soil parameters stored"
+      },
+      "system_integration": {
+        "test_1": "Submit SCENARIO_001 sequence, verify zoonotic alert generation",
+        "test_2": "Submit SCENARIO_002 sequence, verify foodborne alert",
+        "test_3": "View Dashboard, verify all 12+ records appear",
+        "test_4": "View Map, verify 8 human cases and 4 alerts plotted",
+        "test_5": "Query API /api/alerts, verify 4 alerts returned",
+        "test_6": "Test form validation with incomplete data"
+      }
+    }
+  }
+}
