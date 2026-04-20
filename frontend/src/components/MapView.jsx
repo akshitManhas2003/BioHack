@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
+import { getApiUrl } from '../utils/apiConfig';
 import 'leaflet/dist/leaflet.css';
 import { AlertTriangle, Users, Wind, Droplets } from 'lucide-react';
 import '../styles/MapView.css';
@@ -60,7 +61,7 @@ const MapView = () => {
 
   const fetchMapData = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/alerts/map/data');
+      const response = await fetch(getApiUrl('/api/alerts/map/data'));
       const data = await response.json();
       setMapData(data);
       setLoading(false);

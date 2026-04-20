@@ -26,10 +26,11 @@ const AdvancedCharts = ({ onError }) => {
     setError(null);
     try {
       // Fetch comprehensive statistics
+      const { getApiUrl } = await import('../utils/apiConfig');
       const [humanRes, animalRes, alertRes] = await Promise.all([
-        fetch('http://localhost:8000/api/human/cases?days=60'),
-        fetch('http://localhost:8000/api/animal/events?days=60'),
-        fetch('http://localhost:8000/api/alerts/active'),
+        fetch(getApiUrl('/api/human/cases?days=60')),
+        fetch(getApiUrl('/api/animal/events?days=60')),
+        fetch(getApiUrl('/api/alerts/active')),
       ]).catch(err => {
         throw new Error(`Network error: ${err.message}`);
       });

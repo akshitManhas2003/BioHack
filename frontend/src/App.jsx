@@ -6,6 +6,7 @@ import DataSubmission from './pages/DataSubmission';
 import ErrorBoundary from './components/ErrorBoundary';
 import ErrorAlert from './components/ErrorAlert';
 import { ErrorHandler } from './utils/errorHandler';
+import { getApiUrl } from './utils/apiConfig';
 import './App.css';
 
 function App() {
@@ -32,7 +33,7 @@ function App() {
   const fetchDashboardStats = async () => {
     try {
       setError(null);
-      const response = await fetch('http://localhost:8000/api/alerts/dashboard/stats');
+      const response = await fetch(getApiUrl('/api/alerts/dashboard/stats'));
       
       if (!response.ok) {
         throw new Error(`Failed to fetch stats: ${response.status} ${response.statusText}`);

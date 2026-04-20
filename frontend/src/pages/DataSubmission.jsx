@@ -61,7 +61,8 @@ const DataSubmission = ({ onDataSubmitted }) => {
     setLoading(true);
     setMessage(null);
     try {
-      const response = await fetch('http://localhost:8000/api/human/reports', {
+      const { getApiUrl } = await import('../utils/apiConfig');
+      const response = await fetch(getApiUrl('/api/human/reports'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(humanForm),
@@ -99,7 +100,8 @@ const DataSubmission = ({ onDataSubmitted }) => {
     setLoading(true);
     setMessage(null);
     try {
-      const response = await fetch('http://localhost:8000/api/animal/reports', {
+      const { getApiUrl } = await import('../utils/apiConfig');
+      const response = await fetch(getApiUrl('/api/animal/reports'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(animalForm),
@@ -137,7 +139,8 @@ const DataSubmission = ({ onDataSubmitted }) => {
     setLoading(true);
     setMessage(null);
     try {
-      const response = await fetch('http://localhost:8000/api/environmental/reports', {
+      const { getApiUrl } = await import('../utils/apiConfig');
+      const response = await fetch(getApiUrl('/api/environmental/reports'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(envForm),

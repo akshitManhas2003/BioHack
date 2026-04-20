@@ -14,7 +14,8 @@ const AlertsList = () => {
 
   const fetchAlerts = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/alerts/active');
+      const { getApiUrl } = await import('../utils/apiConfig');
+      const response = await fetch(getApiUrl('/api/alerts/active'));
       const data = await response.json();
       setAlerts(data);
       setLoading(false);
@@ -56,7 +57,8 @@ const AlertsList = () => {
 
   const updateAlertStatus = async (alertId, newStatus) => {
     try {
-      await fetch(`http://localhost:8000/api/alerts/alert/${alertId}/status`, {
+      const { getApiUrl } = await import('../utils/apiConfig');
+      await fetch(getApiUrl(`/api/alerts/alert/${alertId}/status`), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

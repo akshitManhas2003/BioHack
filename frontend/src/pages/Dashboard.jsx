@@ -5,6 +5,7 @@ import AlertsList from '../components/AlertsList';
 import AdvancedCharts from '../components/AdvancedCharts';
 import ErrorAlert from '../components/ErrorAlert';
 import { ErrorHandler, ERROR_SEVERITY } from '../utils/errorHandler';
+import { getApiUrl } from '../utils/apiConfig';
 import '../styles/Dashboard.css';
 
 const Dashboard = ({ stats, onRefresh }) => {
@@ -23,9 +24,9 @@ const Dashboard = ({ stats, onRefresh }) => {
     try {
       setError(null);
       const [alertRes, humanRes, animalRes] = await Promise.all([
-        fetch('http://localhost:8000/api/alerts/statistics'),
-        fetch('http://localhost:8000/api/human/stats'),
-        fetch('http://localhost:8000/api/animal/stats'),
+        fetch(getApiUrl('/api/alerts/statistics')),
+        fetch(getApiUrl('/api/human/stats')),
+        fetch(getApiUrl('/api/animal/stats')),
       ]);
 
       // Check for response errors
