@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { AlertTriangle, Users, Wind, Droplets, Activity, RotateCw, TrendingUp } from 'lucide-react';
+import { AlertTriangle, Users, Wind, Droplets, Activity, RotateCw, TrendingUp, Download } from 'lucide-react';
 import AlertsList from '../components/AlertsList';
 import AdvancedCharts from '../components/AdvancedCharts';
 import ErrorAlert from '../components/ErrorAlert';
+import KPIDashboard from '../components/KPIDashboard';
+import DataFilters from '../components/DataFilters';
+import InteractiveCharts from '../components/InteractiveCharts';
+import DataTable from '../components/DataTable';
 import { ErrorHandler, ERROR_SEVERITY } from '../utils/errorHandler';
 import { getApiUrl } from '../utils/apiConfig';
 import '../styles/Dashboard.css';
@@ -15,6 +19,14 @@ const Dashboard = ({ stats, onRefresh }) => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
+  const [filters, setFilters] = useState({
+    dateFrom: '',
+    dateTo: '',
+    caseType: 'all',
+    severity: 'all',
+    region: 'all',
+  });
+  const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
     fetchAllStats();
@@ -66,6 +78,33 @@ const Dashboard = ({ stats, onRefresh }) => {
     setError(new Error(errorMsg));
   };
 
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+    // In production, would filter the tableData based on these filters
+  };
+
+  const handleExport = (currentFilters) => {
+    // Create CSV content
+    const headers = ['Type', 'Case ID', 'Date', 'Severity', 'Status', 'Location'];
+    const csvContent = [
+      headers.join(','),
+      ...tableData.map(row =>
+        `${row.type},${row.id},${row.date},${row.severity},${row.status},${row.location}`
+      )
+    ].join('\n');
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `surveillance-data-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
+
   const getRiskColor = (level) => {
     switch (level) {
       case 'critical':
@@ -106,6 +145,12 @@ const Dashboard = ({ stats, onRefresh }) => {
           severity={ERROR_SEVERITY.ERROR}
         />
       )}
+
+      {/* KPI Dashboard */}
+      <KPIDashboard />
+
+      {/* Filters and Export */}
+      <DataFilters onFilterChange={handleFilterChange} onExport={handleExport} />
 
       {/* Dashboard Header */}
       <div className="dashboard-header">
@@ -295,6 +340,29 @@ const Dashboard = ({ stats, onRefresh }) => {
           Advanced Analytics
         </h2>
         <AdvancedCharts onError={handleChartError} />
+      </div>
+
+      {/* Interactive Charts */}
+      <InteractiveCharts />
+
+      {/* Data Table */}
+      <div className="mt-8" style={{ padding: '0 20px' }}>
+        <DataTable
+          data={[
+            { type: 'Human', id: 'H001', date: '2024-01-15', severity: 'High', status: 'Active', location: 'Region A' },
+            { type: 'Animal', id: 'A001', date: '2024-01-14', severity: 'Medium', status: 'Monitored', location: 'Region B' },
+            { type: 'Environmental', id: 'E001', date: '2024-01-13', severity: 'Low', status: 'Resolved', location: 'Region C' },
+          ]}
+          columns={[
+            { key: 'type', label: 'Type' },
+            { key: 'id', label: 'Case ID' },
+            { key: 'date', label: 'Date' },
+            { key: 'severity', label: 'Severity' },
+            { key: 'status', label: 'Status' },
+            { key: 'location', label: 'Location' },
+          ]}
+          title="Surveillance Cases"
+        />
       </div>
     </div>
   );
