@@ -189,17 +189,21 @@ const DataSubmission = ({ onDataSubmitted }) => {
   const renderHumanForm = () => (
     <form onSubmit={handleHumanSubmit} className="space-y-6">
       <div className="grid-2">
-        <FormField label="Patient Name">
+        <FormField label="Patient Name" required>
           <input
             type="text"
+            maxLength="100"
+            required
             value={humanForm.patient_name}
             onChange={(e) => setHumanForm({ ...humanForm, patient_name: e.target.value })}
-            placeholder="Enter patient name"
+            placeholder="Enter full patient name"
           />
         </FormField>
         <FormField label="Age">
           <input
             type="number"
+            min="0"
+            max="150"
             value={humanForm.age}
             onChange={(e) => setHumanForm({ ...humanForm, age: e.target.value })}
             placeholder="Age in years"
