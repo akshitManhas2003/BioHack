@@ -86,7 +86,7 @@ const MapView = () => {
       switch (type) {
         case 'human':
           color = '#FF0000'; // Red for human
-          icon = L.icon({
+          icon = L.divIcon({
             className: 'human-marker',
             html: `<div style="background-color: ${color}; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px rgba(0,0,0,0.3);"></div>`,
             iconSize: [28, 28],
@@ -96,7 +96,7 @@ const MapView = () => {
           break;
         case 'animal':
           color = '#FFD700'; // Gold for animal
-          icon = L.icon({
+          icon = L.divIcon({
             className: 'animal-marker',
             html: `<div style="background-color: ${color}; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px rgba(0,0,0,0.3);"></div>`,
             iconSize: [28, 28],
@@ -106,7 +106,7 @@ const MapView = () => {
           break;
         case 'environmental':
           color = '#00AA00'; // Green for environmental
-          icon = L.icon({
+          icon = L.divIcon({
             className: 'env-marker',
             html: `<div style="background-color: ${color}; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px rgba(0,0,0,0.3);"></div>`,
             iconSize: [28, 28],
@@ -116,7 +116,7 @@ const MapView = () => {
           break;
         case 'alert':
           color = '#8B0000'; // Dark red for alerts
-          icon = L.icon({
+          icon = L.divIcon({
             className: 'alert-marker',
             html: `<div style="background-color: ${color}; width: 28px; height: 28px; border-radius: 50%; border: 3px solid yellow; box-shadow: 0 0 6px rgba(255,255,0,0.5);"></div>`,
             iconSize: [34, 34],
