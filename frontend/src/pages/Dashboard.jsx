@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { AlertTriangle, Users, Wind, Droplets, Activity, RotateCw, TrendingUp } from 'lucide-react';
 import AlertsList from '../components/AlertsList';
+import AdvancedCharts from '../components/AdvancedCharts';
+import ErrorAlert from '../components/ErrorAlert';
+import { ErrorHandler, ERROR_SEVERITY } from '../utils/errorHandler';
 import '../styles/Dashboard.css';
 
 const Dashboard = ({ stats, onRefresh }) => {
@@ -10,6 +13,7 @@ const Dashboard = ({ stats, onRefresh }) => {
   const [animalStats, setAnimalStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchAllStats();
@@ -17,11 +21,17 @@ const Dashboard = ({ stats, onRefresh }) => {
 
   const fetchAllStats = async () => {
     try {
+      setError(null);
       const [alertRes, humanRes, animalRes] = await Promise.all([
         fetch('http://localhost:8000/api/alerts/statistics'),
         fetch('http://localhost:8000/api/human/stats'),
         fetch('http://localhost:8000/api/animal/stats'),
       ]);
+
+      // Check for response errors
+      if (!alertRes.ok) throw new Error(`Alert stats failed: ${alertRes.status}`);
+      if (!humanRes.ok) throw new Error(`Human stats failed: ${humanRes.status}`);
+      if (!animalRes.ok) throw new Error(`Animal stats failed: ${animalRes.status}`);
 
       const alertData = await alertRes.json();
       const humanData = await humanRes.json();
@@ -31,17 +41,28 @@ const Dashboard = ({ stats, onRefresh }) => {
       setHumanStats(humanData);
       setAnimalStats(animalData);
       setLoading(false);
-    } catch (error) {
-      console.error('Error fetching stats:', error);
+    } catch (err) {
+      const enhancedError = await ErrorHandler.handle(err, 'Dashboard.fetchAllStats');
+      setError(enhancedError);
       setLoading(false);
     }
   };
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    await onRefresh();
-    await fetchAllStats();
-    setRefreshing(false);
+    try {
+      await onRefresh();
+      await fetchAllStats();
+    } catch (err) {
+      const enhancedError = await ErrorHandler.handle(err, 'Dashboard.handleRefresh');
+      setError(enhancedError);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  const handleChartError = (errorMsg) => {
+    setError(new Error(errorMsg));
   };
 
   const getRiskColor = (level) => {
@@ -75,6 +96,16 @@ const Dashboard = ({ stats, onRefresh }) => {
 
   return (
     <div className="dashboard-container">
+      {/* Error Alert */}
+      {error && (
+        <ErrorAlert
+          error={error}
+          onRetry={fetchAllStats}
+          onDismiss={() => setError(null)}
+          severity={ERROR_SEVERITY.ERROR}
+        />
+      )}
+
       {/* Dashboard Header */}
       <div className="dashboard-header">
         <div className="flex items-center justify-between">
@@ -254,6 +285,15 @@ const Dashboard = ({ stats, onRefresh }) => {
           Active Alerts
         </h3>
         <AlertsList />
+      </div>
+
+      {/* Advanced Analytics Charts */}
+      <div className="mt-12">
+        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+          <TrendingUp className="w-6 h-6 text-emerald-400" />
+          Advanced Analytics
+        </h2>
+        <AdvancedCharts onError={handleChartError} />
       </div>
     </div>
   );

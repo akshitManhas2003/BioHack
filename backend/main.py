@@ -3,11 +3,12 @@ One Health Surveillance System - FastAPI Backend
 Main application entry point
 """
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from app.utils.database import init_db
-from app.routes import human_routes, animal_routes, environmental_routes, alert_routes
+from app.utils.error_handler import exception_handler, APIException, ErrorLogger
+from app.routes import human_routes, animal_routes, environmental_routes, alert_routes, statistics_routes
 
 # Lifespan context manager for startup and shutdown events
 @asynccontextmanager
@@ -44,6 +45,22 @@ app.include_router(human_routes.router)
 app.include_router(animal_routes.router)
 app.include_router(environmental_routes.router)
 app.include_router(alert_routes.router)
+app.include_router(statistics_routes.router)
+
+# Add exception handlers
+@app.exception_handler(APIException)
+async def api_exception_handler(request: Request, exc: APIException):
+    """Handle API exceptions"""
+    ErrorLogger.log_error(exc, context=f"API: {request.url.path}")
+    return JSONResponse(
+        status_code=exc.status_code,
+        content=exc.to_dict()
+    )
+
+@app.exception_handler(Exception)
+async def general_exception_handler(request: Request, exc: Exception):
+    """Handle general exceptions"""
+    return await exception_handler(request, exc)
 
 
 # Health check endpoint
@@ -71,19 +88,10 @@ async def root():
             "human_data": "/api/human",
             "animal_data": "/api/animal",
             "environmental_data": "/api/environmental",
-            "alerts": "/api/alerts"
+            "alerts": "/api/alerts",
+            "statistics": "/api/statistics"
         }
     }
-
-
-# Error handlers
-@app.exception_handler(Exception)
-async def general_exception_handler(request, exc):
-    """Handle general exceptions"""
-    return JSONResponse(
-        status_code=500,
-        content={"detail": "Internal server error", "error": str(exc)},
-    )
 
 
 if __name__ == "__main__":
